@@ -15,7 +15,7 @@ var Pkr = require('pkr');
 // Pack Folder Example:
 var pkr = new Pkr();
 pkr.ignore('node_modules');
-pkr.add('.');
+pkr.add('.'); // You can add folder or a single file
 var buffer = pkr.packSync();
 
 // Archived Files:
@@ -25,7 +25,7 @@ console.log(pkr.files);
 fs.writeFileSync('./archive.pkr', buffer);
 
 // Unpack To Folder Example:
-Pkr.unpackToSync('.', buffer);
+Pkr.unpackToSync(buffer, '.');
 
 // Unpack To Memory Example:
 var files = Pkr.unpackSync(buffer);
