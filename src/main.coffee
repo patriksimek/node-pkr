@@ -16,6 +16,7 @@ class Pkr
 	ignores: null
 	prefix: 'pkr'
 	mode: '755'
+	verbose: false
 	
 	constructor: ->
 		@files = []
@@ -34,9 +35,12 @@ class Pkr
 			for ignore in @ignores
 				if ignore.exec path then return @
 			
-			@files.push
+			f =
 				filename: path
 				path: (if relative then require('path').relative(relative, path) else require('path').basename(path)).replace(/\\/g, '/')
+			
+			@files.push f
+			if @verbose then console.log f.path
 		
 		@
 	
