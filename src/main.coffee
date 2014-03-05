@@ -4,7 +4,7 @@ mkdirp = require 'mkdirp'
 osSlash = if process.platform is 'win32' then "\\" else "/"
 
 createRegexp = (path) ->
-	new RegExp "^#{path.replace(/([\\\/\.])/g, '\\$1').replace(/\*/g, '([^\\/\\\\]*)')}(.*)$"
+	new RegExp "^#{path.trim().replace(/([\\\/\.])/g, '\\$1').replace(/\*/g, '([^\\/\\\\]*)')}(.*)$"
 
 readIgnore = (path, pkr) ->
 	pkr.ignores.push createRegexp("#{path}#{osSlash}.#{pkr.prefix}ignore")
