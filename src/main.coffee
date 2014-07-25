@@ -43,7 +43,7 @@ class Pkr
 			if @verbose then console.log f.path
 		
 		@
-	
+
 	ignore: (path) ->
 		if path instanceof RegExp
 			@ignores.push path
@@ -52,11 +52,11 @@ class Pkr
 			@ignores.push createRegexp require('path').resolve path
 	
 	packSync: ->
-		files = ({path: file.path, filename: file.filename} for file in @files)
+		files = ({path: file.path, filename: file.filename, data: file.data} for file in @files)
 		offset = 0
 		
 		for file in files
-			file.data = fs.readFileSync file.filename
+			file.data ?= fs.readFileSync file.filename
 			file.offset = offset
 			
 			offset += file.data.length
