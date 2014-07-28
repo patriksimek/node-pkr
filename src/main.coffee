@@ -4,7 +4,12 @@ mkdirp = require 'mkdirp'
 osSlash = if process.platform is 'win32' then "\\" else "/"
 
 createRegexp = (path) ->
-	new RegExp "^#{path.trim().replace(/([\\\/\.])/g, '\\$1').replace(/\*/g, '([^\\/\\\\]*)')}(.*)$"
+	if (/[\\\/]/).test path
+		path = require('path').resolve path
+		new RegExp "^#{path.trim().replace(/([\\\/\.])/g, '\\$1').replace(/\*/g, '([^\\/\\\\]*)')}(.*)$"
+	
+	else
+		new RegExp "#{path.trim().replace(/([\\\/\.])/g, '\\$1').replace(/\*/g, '([^\\/\\\\]*)')}"
 
 readIgnore = (path, pkr) ->
 	pkr.ignores.push createRegexp("#{path}#{osSlash}.#{pkr.prefix}ignore")
@@ -24,6 +29,10 @@ class Pkr
 	
 	add: (path, relative) ->
 		path = require('path').resolve path
+		
+		for ignore in @ignores
+			if ignore.exec path then return @
+		
 		if fs.statSync(path).isDirectory()
 			if fs.existsSync "#{path}#{osSlash}.#{@prefix}ignore"
 				readIgnore path, @
@@ -32,16 +41,13 @@ class Pkr
 				@add "#{path}#{osSlash}#{item}", relative ? path
 		
 		else
-			for ignore in @ignores
-				if ignore.exec path then return @
-			
 			f =
 				filename: path
 				path: (if relative then require('path').relative(relative, path) else require('path').basename(path)).replace(/\\/g, '/')
 			
 			@files.push f
 			if @verbose then console.log f.path
-		
+
 		@
 
 	ignore: (path) ->
@@ -49,7 +55,7 @@ class Pkr
 			@ignores.push path
 			
 		else
-			@ignores.push createRegexp require('path').resolve path
+			@ignores.push createRegexp path
 	
 	packSync: ->
 		files = ({path: file.path, filename: file.filename, data: file.data} for file in @files)
