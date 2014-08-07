@@ -115,11 +115,15 @@ class Pkr
 		
 		Object.defineProperty header, 'find',
 			value: (path) ->
-				path = path.replace(/\\/g, '/') # normalize slashes to /
-				for file in @ when path is file.path
-					return file
-				
-				null
+				if path instanceof RegExp
+					return (file for file in @ when path.test file.path)
+					
+				else
+					path = path.replace(/\\/g, '/') # normalize slashes to /
+					for file in @ when path is file.path
+						return file
+					
+					null
 
 		header
 	
