@@ -37,7 +37,7 @@ Pkr automatically reads `.pkrignore` file. You can change default name with `pkr
 <a name="license" />
 ## License
 
-Copyright (c) 2014 Patrik Simek
+Copyright (c) 2014-2015 Patrik Simek
 
 The MIT License
 
