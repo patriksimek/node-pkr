@@ -20,8 +20,9 @@ class Pkr
 	files: null
 	ignores: null
 	prefix: 'pkr'
-	mode: '755'
 	verbose: false
+	
+	@mode: '775'
 	
 	constructor: ->
 		@files = []
@@ -124,6 +125,20 @@ class Pkr
 						return file
 					
 					null
+		
+		Object.defineProperty header, 'saveToSync',
+			value: (root) ->
+				root = require('path').resolve root
+		
+				# make sure our root folder exists
+				mkdirp.sync root
+				
+				for file in @
+					folder = require('path').normalize("#{root}#{osSlash}#{require('path').dirname(file.path)}")
+					if folder isnt root then mkdirp.sync folder, Pkr.mode
+					
+					fs.writeFileSync require('path').normalize("#{root}#{osSlash}#{file.path}"), file.data,
+						mode: Pkr.mode
 
 		header
 	
@@ -135,9 +150,9 @@ class Pkr
 		
 		for file in @unpackSync buffer
 			folder = require('path').normalize("#{root}#{osSlash}#{require('path').dirname(file.path)}")
-			if folder isnt root then mkdirp.sync folder, @mode
+			if folder isnt root then mkdirp.sync folder, Pkr.mode
 			
 			fs.writeFileSync require('path').normalize("#{root}#{osSlash}#{file.path}"), file.data,
-				mode: @mode
+				mode: Pkr.mode
 
 module.exports = Pkr

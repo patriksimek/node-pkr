@@ -4,6 +4,8 @@ assert = require "assert"
 data = null
 
 describe 'pkr test suite', ->
+	files = null
+	
 	it 'packing', (done) ->
 		p = new Pkr
 		p.add "#{__dirname}/in"
@@ -15,10 +17,15 @@ describe 'pkr test suite', ->
 		
 		done()
 	
-	it 'unpacking', (done) ->
+	it 'unpacking to memory', (done) ->
 		files = Pkr.unpackSync data, "#{__dirname}/out"
 		
 		assert.equal files.length, 1
 		assert.equal files[0].path, 'a.png'
+		
+		done()
+	
+	it 'save from memory to disk', (done) ->
+		files.saveToSync "#{__dirname}/out"
 		
 		done()
