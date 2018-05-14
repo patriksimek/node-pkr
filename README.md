@@ -1,6 +1,6 @@
 # node-pkr [![Dependency Status](https://david-dm.org/patriksimek/node-pkr.png)](https://david-dm.org/patriksimek/node-pkr) [![NPM version](https://badge.fury.io/js/pkr.png)](http://badge.fury.io/js/pkr)
 
-An easy-to-use binary packager.
+An easy-to-use binary packager and compressor.
 
 ## Installation
 
@@ -12,32 +12,43 @@ An easy-to-use binary packager.
 var fs = require('fs');
 var Pkr = require('pkr'); 
 
-// Pack Folder Example:
+// Pack folder:
 var pkr = new Pkr();
 pkr.ignore('node_modules');
 pkr.add('.'); // You can add folder or a single file
 var buffer = pkr.packSync();
 
+// Manually add a file:
+pkr.files.push({
+    path: 'greeting.txt',
+    filename: '/tmp/greeting.txt' // Path on a local file system
+});
+
+// Manually add a buffer:
+pkr.files.push({
+    path: 'data/greeting.txt',
+    data: Buffer.from('hello world')
+});
+
 // Archived Files:
 console.log(pkr.files);
 
-// Save Archive Example:
+// Save archive:
 fs.writeFileSync('./archive.pkr', buffer);
 
-// Unpack To Folder Example:
+// Unpack to folder:
 Pkr.unpackToSync(buffer, '.');
 
-// Unpack To Memory Example:
+// Unpack to memory:
 var files = Pkr.unpackSync(buffer);
 console.log(files);
 ```
 
 Pkr automatically reads `.pkrignore` file. You can change default name with `pkr.prefix = 'xxx'` to `.xxxignore`.
 
-<a name="license" />
 ## License
 
-Copyright (c) 2014-2015 Patrik Simek
+Copyright (c) 2014-2018 Patrik Simek
 
 The MIT License
 
