@@ -23,7 +23,7 @@
 	},
 	"devDependencies": {
 		"coffeescript": "^1.9.1",
-		"mocha": "^5.1.1"
+		"mocha": "^10.2.0"
 	},
 	"engines": {
 		"node": ">=6.0"
